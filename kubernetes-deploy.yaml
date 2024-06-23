@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: btc-namespace
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: btc-secret
+  namespace: btc-namespace
+type: Opaque
+data:
+  API_KEY: dmVyeV9zZWNyZXRfYXBpX2tleQ== # Base64 encoded "very_secret_api_key"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-app-deployment
+  namespace: btc-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-app
+  template:
+    metadata:
+      labels:
+        app: btc-app
+    spec:
+      containers:
+      - name: btc-app
+        image: boranx/btc-app:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongodb:27017"
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: btc-secret
+              key: API_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-app-service
+  namespace: btc-namespace
+spec:
+  selector:
+    app: btc-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+  namespace: btc-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:4.2
+        ports:
+        - containerPort: 27017
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: btc-namespace
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017

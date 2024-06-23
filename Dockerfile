@@ -1,13 +1,20 @@
-FROM python:3.8-slim
+# Use the official Python image from the Docker Hub
+FROM python:3.12-slim
 
+# Set the working directory in the container
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+# Copy the current directory contents into the container at /app
+COPY . .
 
-COPY app.py app.py
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-ENV MONGO_URI=mongodb://mongodb:27017/
-ENV API_KEY=your_secret_api_key
+# Make port 5000 available to the world outside this container
+EXPOSE 5000
 
-CMD ["python", "app.py"]
+# Define environment variable
+ENV FLASK_APP=app.py
+
+# Run app.py when the container launches
+CMD ["flask", "run", "--host=0.0.0.0"]
