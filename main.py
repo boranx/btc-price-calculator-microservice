@@ -53,7 +53,15 @@ def fetch_and_store_btc_price():
         print("Failed to fetch BTC price")
 
 # Scheduler for fetching BTC prices
-schedule.every(5).seconds.do(fetch_and_store_btc_price)
+schedule.every(5).minutes.do(fetch_and_store_btc_price)
+
+def delete_old_data():
+    twelve_months_ago = datetime.now(timezone.utc) - timedelta(days=365)
+    result = collection.delete_many({"timestamp": {"$lt": twelve_months_ago}})
+    print(f"Deleted {result.deleted_count} old records")
+
+# Scheduler for deleting old data
+schedule.every().day.at("00:00").do(delete_old_data)
 
 def run_scheduler():
     while True:
