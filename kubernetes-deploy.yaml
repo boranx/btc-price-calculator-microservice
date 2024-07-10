@@ -40,6 +40,8 @@ spec:
             secretKeyRef:
               name: btc-secret
               key: API_KEY
+        - name: FLASK_APP
+          value: "main.py"
 ---
 apiVersion: v1
 kind: Service
