@@ -19,6 +19,10 @@ export MONGO_URI=mongodb://localhost:27017/
 export API_KEY=very_secret_api_key
 python main.py
 ```
+or all stack with single command
+```sh
+podman-compose up -d
+```
 
 ## Examples
 ```sh

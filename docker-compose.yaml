@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:4.2
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  btc-app:
+    image: boranx/btc-app:latest
+    container_name: btc-app
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+      - API_KEY=very_secret_api_key
+      - FLASK_APP=main.py
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo-data:
+    driver: local
