@@ -1,14 +1,8 @@
-# commands/fetch_store.py
 from datetime import datetime, timezone
 import requests
-import os
-from utils.db import get_db
+from utils.config import BTC_API_URL, EXCHANGE_API_URL
 
-BTC_API_URL = "https://api.coindesk.com/v1/bpi/currentprice.json"
-EXCHANGE_API_URL = "https://api.exchangerate-api.com/v4/latest/EUR"
-
-def fetch_and_store_btc_price():
-    client, db, collection = get_db()
+def fetch_and_store_btc_price(collection):
     response = requests.get(BTC_API_URL)
     if response.status_code == 200:
         data = response.json()

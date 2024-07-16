@@ -1,4 +1,3 @@
-# queries/calculate_averages.py
 def calculate_averages(prices):
     if not prices:
         return {"avg_eur": None, "avg_czk": None}
