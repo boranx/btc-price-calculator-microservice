@@ -72,5 +72,5 @@ docker push boranx/btc-app:latest
 
 ## Improvements
 
-[ ] Introduce different endpoints for calculated averages vs last prices in the DB (cache if possible)
+[ ] Introduce different endpoints for calculated averages vs last prices in the DB (cache if possible)  
 [ ] Integrate a 3rd party redis like key-value store so that the scraping times can be set remotely during runtime
